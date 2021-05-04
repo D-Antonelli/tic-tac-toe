@@ -4,8 +4,7 @@ import "./index.css";
 
 /**
  * TODO
- * RE-SET HISTORY WHEN HISTORY BUTTON CLICKED
- * https://reactjs.org/tutorial/tutorial.html#why-immutability-is-important
+ * 
  *
  */
 
@@ -72,7 +71,7 @@ function Game() {
 
   const [xIsNext, setXIsNext] = useState(true);
   const [status, setStatus] = useState("Next player is X");
-  const [stepNumber, setStepNumber] = useState(history.length);
+  const [stepNumber, setStepNumber] = useState(history.length-1);
 
   function handleClick(i) {
     const timeline = history.slice(0, stepNumber + 1);
@@ -104,7 +103,8 @@ function Game() {
 
   useEffect(() => {
     const current = history[history.length - 1];
-    const winner = calculateWinner(current.squares);
+    const squares = current.squares.slice();
+    const winner = calculateWinner(squares);
     let currStatus;
     if (winner) {
       currStatus = "Winner: " + winner;
@@ -117,7 +117,7 @@ function Game() {
   return (
     <div className="game">
       <div className="game-board">
-        <Board squares={history[history.length -1].squares} onClick={(i) => handleClick(i)} />
+        <Board squares={history[stepNumber].squares} onClick={(i) => handleClick(i)} />
       </div>
       <div className="game-info">
         <div>{status}</div>
