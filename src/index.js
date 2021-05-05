@@ -54,9 +54,9 @@ function Board({ squares, onClick, highlight }) {
 
   const row = (start, end) => (
     <div className="board-row">
-      {Array(end - start)
-        .fill(null)
-        .map((ele, index) => renderSquare(start++))}
+      {Array.from(Array(end - start)).map(() =>
+        renderSquare(start++)
+      )}
     </div>
   );
 
