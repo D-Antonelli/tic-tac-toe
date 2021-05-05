@@ -6,7 +6,7 @@ import "./index.css";
  * TODO
   Display the location for each move in the format (col, row) in the move history list.  [X]
   Bold the currently selected item in the move list. [X]
-  Rewrite Board to use two loops to make the squares instead of hardcoding them.
+  Rewrite Board to use two loops to make the squares instead of hardcoding them [X].
   Add a toggle button that lets you sort the moves in either ascending or descending order.
   When someone wins, highlight the three squares that caused the win.
   When no one wins, display a message about the result being a draw.
@@ -47,27 +47,24 @@ function Board({ squares, onClick, highlight }) {
         value={squares[i]}
         style={i === highlight ? { color: "red" } : { color: "black" }}
         onClick={() => onClick(i)}
+        key={i}
       />
     );
   }
 
+  const row = (start, end) => (
+    <div className="board-row">
+      {Array(end - start)
+        .fill(null)
+        .map((ele, index) => renderSquare(start++))}
+    </div>
+  );
+
   return (
     <div>
-      <div className="board-row">
-        {renderSquare(0)}
-        {renderSquare(1)}
-        {renderSquare(2)}
-      </div>
-      <div className="board-row">
-        {renderSquare(3)}
-        {renderSquare(4)}
-        {renderSquare(5)}
-      </div>
-      <div className="board-row">
-        {renderSquare(6)}
-        {renderSquare(7)}
-        {renderSquare(8)}
-      </div>
+      {row(0, 3)}
+      {row(3, 6)}
+      {row(6, 9)}
     </div>
   );
 }
