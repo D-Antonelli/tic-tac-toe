@@ -7,7 +7,7 @@ import "./index.css";
   Display the location for each move in the format (col, row) in the move history list.  [X]
   Bold the currently selected item in the move list. [X]
   Rewrite Board to use two loops to make the squares instead of hardcoding them [X].
-  Add a toggle button that lets you sort the moves in either ascending or descending order.
+  Add a toggle button that lets you sort the moves in either ascending or descending order [x].
   When someone wins, highlight the three squares that caused the win.
   When no one wins, display a message about the result being a draw.
  */
@@ -40,12 +40,12 @@ function Square({ value, onClick, style }) {
   );
 }
 
-function Board({ squares, onClick, highlight }) {
+function Board({ squares, onClick, bold }) {
   function renderSquare(i) {
     return (
       <Square
         value={squares[i]}
-        style={i === highlight ? { color: "red" } : { color: "black" }}
+        style={i === bold ? { color: "red" } : { color: "black" }}
         onClick={() => onClick(i)}
         key={i}
       />
@@ -80,7 +80,7 @@ function Game() {
   const [xIsNext, setXIsNext] = useState(true);
   const [status, setStatus] = useState("Next player is X");
   const [stepNumber, setStepNumber] = useState(history.length - 1);
-  const [highlight, setHightlight] = useState(null);
+  const [bold, setBold] = useState(null);
   const coords = [
     { col: 1, row: 1 },
     { col: 2, row: 1 },
@@ -97,14 +97,14 @@ function Game() {
     const timeline = history.slice(0, stepNumber + 1);
     const current = timeline[timeline.length - 1];
     const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
-      return;
-    }
+      if (calculateWinner(squares) || squares[i]) {
+        return;
+      }
     squares[i] = xIsNext ? "X" : "O";
     setHistory(timeline.concat([{ squares: squares, move: coords[i] }]));
     setStepNumber(timeline.length);
     setXIsNext(!xIsNext);
-    setHightlight(null);
+    setBold(null);
   }
 
   function jumpTo(step) {
@@ -114,12 +114,19 @@ function Game() {
       (ele) =>
         history[step].move.col === ele.col && history[step].move.row === ele.row
     );
-    setHightlight(index);
+    setBold(index);
+  }
+
+  function onSort() {
+    const timeline = [...history];
+    setStepNumber(0);
+    setHistory(timeline.reverse());
   }
 
   const moves = history.map((step, move) => {
-    const desc = move
-      ? "Go to move col #" + step.move.col + " row #" + step.move.row
+    const {col, row} = step.move;
+    const desc = col && row
+      ? "Go to move col #" + col + " row #" + row
       : "Go to game start";
     return (
       <li key={move}>
@@ -147,11 +154,12 @@ function Game() {
         <Board
           squares={history[stepNumber].squares}
           onClick={(i) => handleClick(i)}
-          highlight={highlight}
+          bold={bold}
         />
       </div>
       <div className="game-info">
         <div>{status}</div>
+        <button onClick={onSort}>Sort</button>
         <ol>{moves}</ol>
       </div>
     </div>
