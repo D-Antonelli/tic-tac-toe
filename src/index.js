@@ -4,8 +4,12 @@ import "./index.css";
 
 /**
  * TODO
- * 
- *
+  Display the location for each move in the format (col, row) in the move history list.  [X]
+  Bold the currently selected item in the move list. [X]
+  Rewrite Board to use two loops to make the squares instead of hardcoding them.
+  Add a toggle button that lets you sort the moves in either ascending or descending order.
+  When someone wins, highlight the three squares that caused the win.
+  When no one wins, display a message about the result being a draw.
  */
 
 function calculateWinner(squares) {
@@ -66,26 +70,44 @@ function Game() {
   const [history, setHistory] = useState([
     {
       squares: Array(9).fill(null),
+      move: { col: null, row: null }
     },
   ]);
 
   const [xIsNext, setXIsNext] = useState(true);
   const [status, setStatus] = useState("Next player is X");
-  const [stepNumber, setStepNumber] = useState(history.length-1);
+  const [stepNumber, setStepNumber] = useState(history.length - 1);
+  const [highlight, setHighlight] = useState({move: null});
+  const coords = [
+    { col: 1, row: 1 },
+    { col: 2, row: 1 },
+    { col: 3, row: 1 },
+    { col: 1, row: 2 },
+    { col: 2, row: 2 },
+    { col: 3, row: 2 },
+    { col: 1, row: 3 },
+    { col: 2, row: 3 },
+    { col: 3, row: 3 },
+  ];
 
   function handleClick(i) {
     const timeline = history.slice(0, stepNumber + 1);
     const current = timeline[timeline.length - 1];
     const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
+    if (calculateWinner(squares)) {
+      return;
+    }
+    if(squares[i]) {
+      const move = {col: coords[i].col, row: coords[i].row}
+      const match = history.findIndex(log => log.move.col === move.col && log.move.row === move.row);
+      setHighlight(match);
       return;
     }
     squares[i] = xIsNext ? "X" : "O";
-    setHistory(timeline.concat([{ squares: squares }]));
+    setHistory(timeline.concat([{ squares: squares, move: coords[i] }]));
     setStepNumber(timeline.length);
     setXIsNext(!xIsNext);
   }
-
 
   function jumpTo(step) {
     setStepNumber(step);
@@ -93,10 +115,10 @@ function Game() {
   }
 
   const moves = history.map((step, move) => {
-    const desc = move ? "Go to move #" + move : "Go to game start";
+    const desc = move ? "Go to move col #" + step.move.col + " row #" + step.move.row: "Go to game start";
     return (
       <li key={move}>
-        <button onClick={() => jumpTo(move)}>{desc}</button>
+        <button onClick={() => jumpTo(move)} style={move === highlight ? {fontWeight: "bold"} : {fontWeight: "normal"}}>{desc}</button>
       </li>
     );
   });
@@ -112,12 +134,15 @@ function Game() {
       currStatus = "Next player: " + (xIsNext ? "X" : "O");
     }
     setStatus(currStatus);
-  }, [history,xIsNext]);
+  }, [history, xIsNext]);
 
   return (
     <div className="game">
       <div className="game-board">
-        <Board squares={history[stepNumber].squares} onClick={(i) => handleClick(i)} />
+        <Board
+          squares={history[stepNumber].squares}
+          onClick={(i) => handleClick(i)}
+        />
       </div>
       <div className="game-info">
         <div>{status}</div>
