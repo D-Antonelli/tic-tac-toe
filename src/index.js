@@ -32,17 +32,23 @@ function calculateWinner(squares) {
   return null;
 }
 
-function Square({ value, onClick }) {
+function Square({ value, onClick, style }) {
   return (
-    <button className="square" onClick={onClick}>
+    <button className="square" onClick={onClick} style={style}>
       {value}
     </button>
   );
 }
 
-function Board({ squares, onClick }) {
+function Board({ squares, onClick, highlight }) {
   function renderSquare(i) {
-    return <Square value={squares[i]} onClick={() => onClick(i)} />;
+    return (
+      <Square
+        value={squares[i]}
+        style={i === highlight ? { color: "red" } : { color: "black" }}
+        onClick={() => onClick(i)}
+      />
+    );
   }
 
   return (
@@ -70,14 +76,14 @@ function Game() {
   const [history, setHistory] = useState([
     {
       squares: Array(9).fill(null),
-      move: { col: null, row: null }
+      move: { col: null, row: null },
     },
   ]);
 
   const [xIsNext, setXIsNext] = useState(true);
   const [status, setStatus] = useState("Next player is X");
   const [stepNumber, setStepNumber] = useState(history.length - 1);
-  const [highlight, setHighlight] = useState({move: null});
+  const [highlight, setHightlight] = useState(null);
   const coords = [
     { col: 1, row: 1 },
     { col: 2, row: 1 },
@@ -94,31 +100,33 @@ function Game() {
     const timeline = history.slice(0, stepNumber + 1);
     const current = timeline[timeline.length - 1];
     const squares = current.squares.slice();
-    if (calculateWinner(squares)) {
-      return;
-    }
-    if(squares[i]) {
-      const move = {col: coords[i].col, row: coords[i].row}
-      const match = history.findIndex(log => log.move.col === move.col && log.move.row === move.row);
-      setHighlight(match);
+    if (calculateWinner(squares) || squares[i]) {
       return;
     }
     squares[i] = xIsNext ? "X" : "O";
     setHistory(timeline.concat([{ squares: squares, move: coords[i] }]));
     setStepNumber(timeline.length);
     setXIsNext(!xIsNext);
+    setHightlight(null);
   }
 
   function jumpTo(step) {
     setStepNumber(step);
     setXIsNext(step % 2 === 0);
+    const index = coords.findIndex(
+      (ele) =>
+        history[step].move.col === ele.col && history[step].move.row === ele.row
+    );
+    setHightlight(index);
   }
 
   const moves = history.map((step, move) => {
-    const desc = move ? "Go to move col #" + step.move.col + " row #" + step.move.row: "Go to game start";
+    const desc = move
+      ? "Go to move col #" + step.move.col + " row #" + step.move.row
+      : "Go to game start";
     return (
       <li key={move}>
-        <button onClick={() => jumpTo(move)} style={move === highlight ? {fontWeight: "bold"} : {fontWeight: "normal"}}>{desc}</button>
+        <button onClick={() => jumpTo(move)}>{desc}</button>
       </li>
     );
   });
@@ -142,6 +150,7 @@ function Game() {
         <Board
           squares={history[stepNumber].squares}
           onClick={(i) => handleClick(i)}
+          highlight={highlight}
         />
       </div>
       <div className="game-info">
