@@ -2,16 +2,6 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
-/**
- * TODO
-  Display the location for each move in the format (col, row) in the move history list.  [X]
-  Bold the currently selected item in the move list. [X]
-  Rewrite Board to use two loops to make the squares instead of hardcoding them [X].
-  Add a toggle button that lets you sort the moves in either ascending or descending order [x].
-  When someone wins, highlight the three squares that caused the win. [x]
-  When no one wins, display a message about the result being a draw. [x]
- */
-
 function calculateWinner(squares) {
   const lines = [
     [0, 1, 2],
@@ -47,18 +37,13 @@ function Board({ squares, onClick, styles }) {
   const standartStyle = { color: "black" };
 
   function renderSquare(i) {
+    const { bold, highlight } = styles[i];
     return (
       <Square
         value={squares[i]}
         onClick={() => onClick(i)}
-        key={i}
-        style={
-          styles[i].bold === true
-            ? boldStyle
-            : styles[i].highlight === true
-            ? highlightStyle
-            : standartStyle
-        }
+        key={i.toString()}
+        style={bold ? boldStyle : highlight ? highlightStyle : standartStyle}
       />
     );
   }
@@ -78,10 +63,11 @@ function Board({ squares, onClick, styles }) {
   );
 }
 
-const defaultStyle = Array.from({ length: 9 }, () => ({
+const defaultStyle = Array(9).fill({bold: false, highlight: false});
+/*Array.from({ length: 9 }, () => ({
   bold: false,
   highlight: false,
-}));
+}));*/
 const defaultHistory = [
   {
     squares: Array(9).fill(null),
@@ -109,7 +95,6 @@ function Game() {
 
   function handleClick(i) {
     const timeline = history.slice(0, stepNumber + 1);
-    console.log(stepNumber);
     const current = timeline[timeline.length - 1];
     const squares = current.squares.slice();
     if (calculateWinner(squares) || squares[i]) {
@@ -121,15 +106,18 @@ function Game() {
     setXIsNext(!xIsNext);
   }
 
-  function setBoldTrue(step) {
-    const moveIndex = coords.findIndex(
+  function indexTo(step) {
+    return coords.findIndex(
       (ele) =>
         history[step].move.col === ele.col && history[step].move.row === ele.row
     );
+  }
 
-    if (moveIndex !== -1) {
+  function setBoldTrue(indexTo, step) {
+    const index = indexTo(step);
+    if (index !== -1) {
       const copyStyle = defaultStyle.map((ele) => Object.assign({}, ele));
-      copyStyle[moveIndex].bold = true;
+      copyStyle[index].bold = true;
       setStyles(copyStyle);
     }
   }
@@ -137,12 +125,13 @@ function Game() {
   function jumpTo(step) {
     setStepNumber(step);
     setXIsNext(step % 2 === 0);
-    setBoldTrue(step);
+    setBoldTrue(indexTo, step);
   }
 
   useEffect(() => {
     (function setHightlightTrue() {
-      const squares = history[history.length - 1].squares;
+      const current = history[history.length - 1];
+      const squares = current.squares;
       let copyStyle = defaultStyle.map((ele) => Object.assign({}, ele));
       const winner = calculateWinner(squares);
       const lines = winner?.lines;
@@ -174,31 +163,26 @@ function Game() {
     setHistory(timeline.reverse());
   }
 
-  function reset() {
+  function start() {
     setStepNumber(0);
-    setHistory([
-      {
-        squares: Array(9).fill(null),
-        move: { col: null, row: null },
-      },
-    ]);
+    setHistory(defaultHistory);
   }
 
   const moves = history.map((step, move) => {
     const { col, row } = step.move;
     const desc =
-      col && row
-        ? "Go to move col #" + col + " row #" + row
-        : "Go to game start";
-    return col && row ? (
+      col && row ? "Go to move col #" + col + " row #" + row : "Restart game";
+    const moveButton = (
       <li key={move}>
         <button onClick={() => jumpTo(move)}>{desc}</button>
       </li>
-    ) : (
+    );
+    const startButton = (
       <li key={move}>
-        <button onClick={() => reset()}>{desc}</button>
+        <button onClick={() => start()}>{desc}</button>
       </li>
     );
+    return col && row ? moveButton : startButton;
   });
 
   return (
@@ -213,7 +197,7 @@ function Game() {
       <div className="game-info">
         <div>{status}</div>
         <button onClick={onSort}>Sort</button>
-        <ol>{moves}</ol>
+        <ul>{moves}</ul>
       </div>
     </div>
   );
