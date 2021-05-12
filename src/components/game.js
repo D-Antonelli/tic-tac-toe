@@ -5,11 +5,11 @@ import Board from "./board";
 
 export default function Game() {
   const [history, setHistory] = useState([
-  {
-    squares: Array(9).fill(null),
-    move: { col: null, row: null },
-  },
-]);
+    {
+      squares: Array(9).fill(null),
+      move: { col: null, row: null },
+    },
+  ]);
   const [xIsNext, setXIsNext] = useState(true);
   const [status, setStatus] = useState("Next player is X");
   const [stepNumber, setStepNumber] = useState(history.length - 1);
@@ -28,7 +28,6 @@ export default function Game() {
     setXIsNext(!xIsNext);
   }
 
-
   function indexTo(step) {
     return coords.findIndex(
       (ele) =>
@@ -39,10 +38,10 @@ export default function Game() {
   function setBoldTrue(indexTo, step) {
     const index = indexTo(step);
     if (index !== -1) {
-    const style = {bold: true};
-    let initialStyle = Array(9).fill({});
-    initialStyle[index] = style;
-    setStyles(initialStyle);
+      const style = { bold: true };
+      const initialStyle = Array(9).fill({});
+      initialStyle[index] = style;
+      setStyles(initialStyle);
     }
   }
 
@@ -58,7 +57,7 @@ export default function Game() {
       const squares = current.squares;
       const winner = calculateWinner(squares);
       const lines = winner?.lines;
-      let initialStyle = Array(9).fill({});
+      const initialStyle = Array(9).fill({});
       const style = { highlight: true };
       lines?.forEach((line) => (initialStyle[line] = style));
       setStyles(initialStyle);
@@ -83,7 +82,6 @@ export default function Game() {
     }
     setCurrentStatus();
   }, [history, xIsNext]);
-
 
   const moves = history.map((step, move) => {
     const { col, row } = step.move;
