@@ -2,6 +2,55 @@ import React, { useState, useEffect } from "react";
 import calculateWinner from "../game-logic/calculate-winner";
 import coords from "../game-logic/coordinates";
 import Board from "./board";
+import styled from "styled-components";
+
+const Header = styled.header`
+  display: flex;
+  margin-bottom: 5rem;
+  justify-content: center;
+  height: 10vh;
+`;
+
+const Title = styled.h1`
+  color: #e4ff03;
+  -webkit-text-stroke: 2px black;
+`;
+
+const Main = styled.main`
+  margin: 0 auto;
+  width: 60%;
+  height: 80vh;
+  display: flex;
+  align-items: center;
+`;
+
+const GameBoard = styled.div`
+  margin-right: 10rem;
+`;
+
+const StatusText = styled.h2`
+  color: #34ff22;
+  -webkit-text-stroke: 1px black;
+`;
+
+const Moves = styled.li`
+  margin-bottom: 0.5rem;
+  &:nth-child(1n) {
+    transform: skewX(8deg) skewY(-1deg);
+  }
+
+  &:nth-child(2n) {
+    transform: skewX(-8deg) skewY(2deg);
+  }
+`;
+
+const JumpBtn = styled.button`
+  cursor: pointer;
+  transition: all 2s ease-in-out;
+  &:hover {
+    background: linear-gradient(10deg, #34ff22 0 50%, #e4ff03 50% 100%);
+  }
+`;
 
 export default function Game() {
   const [history, setHistory] = useState([
@@ -37,12 +86,12 @@ export default function Game() {
 
   function setBoldTrue(indexTo, step) {
     const index = indexTo(step);
+    const initialStyle = Array(9).fill({});
     if (index !== -1) {
       const style = { bold: true };
-      const initialStyle = Array(9).fill({});
-      initialStyle[index] = style;
-      setStyles(initialStyle);
+      initialStyle[index] = style;  
     }
+    setStyles(initialStyle);
   }
 
   function jumpTo(step) {
@@ -88,25 +137,30 @@ export default function Game() {
     const desc =
       col && row ? "Go to move col #" + col + " row #" + row : "Start game";
     return (
-      <li key={move}>
-        <button onClick={() => jumpTo(move)}>{desc}</button>
-      </li>
+      <Moves key={move}>
+        <JumpBtn onClick={() => jumpTo(move)} >{desc}</JumpBtn>
+      </Moves>
     );
   });
 
   return (
-    <div className="game">
-      <div className="game-board">
-        <Board
-          squares={history[stepNumber].squares}
-          onClick={(i) => handleClick(i)}
-          styles={styles}
-        />
-      </div>
-      <div className="game-info">
-        <div>{status}</div>
-        <ul>{moves}</ul>
-      </div>
-    </div>
+    <>
+      <Header>
+        <Title>Tic-Tac-Toe</Title>
+      </Header>
+      <Main>
+        <GameBoard>
+          <Board
+            squares={history[stepNumber].squares}
+            onClick={(i) => handleClick(i)}
+            styles={styles}
+          />
+        </GameBoard>
+        <div className="game-info" style={{height: "100%"}}>
+          <div><StatusText>{status}</StatusText></div>
+          <ul style={{listStyle: "none"}}>{moves}</ul>
+        </div>
+      </Main>
+    </>
   );
 }
