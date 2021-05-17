@@ -1,6 +1,5 @@
 import Game from "./components/game";
 import ReactDOM from "react-dom";
-import "./index.css";
 import { createGlobalStyle } from "styled-components";
 import React from "react";
 
