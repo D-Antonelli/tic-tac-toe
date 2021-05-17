@@ -3,6 +3,7 @@ import calculateWinner from "../game-logic/calculate-winner";
 import coords from "../game-logic/coordinates";
 import Board from "./board";
 import styled from "styled-components";
+import Confetti from "react-confetti";
 
 const Header = styled.header`
   display: flex;
@@ -19,7 +20,7 @@ const Title = styled.h1`
 const Main = styled.main`
   margin: 0 auto;
   width: 60%;
-  height: 80vh;
+  height: 78vh;
   display: flex;
   align-items: center;
 `;
@@ -52,6 +53,29 @@ const JumpBtn = styled.button`
   }
 `;
 
+const Footer = styled.footer`
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Credits = styled.span`
+  font-size: 1.8rem;
+`;
+
+const Link = styled.button`
+  color: black;
+  transition: .2s ease;
+
+  &:hover {
+    color: yellow;
+  }
+`;
+
 export default function Game() {
   const [history, setHistory] = useState([
     {
@@ -63,6 +87,7 @@ export default function Game() {
   const [status, setStatus] = useState("Next player is X");
   const [stepNumber, setStepNumber] = useState(history.length - 1);
   const [styles, setStyles] = useState(Array(9).fill({}));
+  const [celebrate, setCelebrate] = useState(false);
 
   function handleClick(i) {
     const timeline = history.slice(0, stepNumber + 1);
@@ -89,7 +114,7 @@ export default function Game() {
     const initialStyle = Array(9).fill({});
     if (index !== -1) {
       const style = { bold: true };
-      initialStyle[index] = style;  
+      initialStyle[index] = style;
     }
     setStyles(initialStyle);
   }
@@ -122,8 +147,9 @@ export default function Game() {
       let currStatus;
       if (result?.winner) {
         currStatus = "Winner: " + result.winner;
+        setCelebrate(true);
       } else if (squares.every((ele) => ele === "X" || ele === "O")) {
-        currStatus = "Draw";
+        currStatus = "Draw 💥";
       } else {
         currStatus = "Next player: " + (xIsNext ? "X" : "O");
       }
@@ -138,7 +164,7 @@ export default function Game() {
       col && row ? "Go to move col #" + col + " row #" + row : "Start game";
     return (
       <Moves key={move}>
-        <JumpBtn onClick={() => jumpTo(move)} >{desc}</JumpBtn>
+        <JumpBtn onClick={() => jumpTo(move)}>{desc}</JumpBtn>
       </Moves>
     );
   });
@@ -156,11 +182,26 @@ export default function Game() {
             styles={styles}
           />
         </GameBoard>
-        <div className="game-info" style={{height: "100%"}}>
-          <div><StatusText>{status}</StatusText></div>
-          <ul style={{listStyle: "none"}}>{moves}</ul>
+        <div className="game-info" style={{ height: "100%" }}>
+          <div>
+            <StatusText>{status}</StatusText>
+          </div>
+          <ul style={{ listStyle: "none" }}>{moves}</ul>
         </div>
       </Main>
+      <Footer>
+        <Credits>
+          Made with &#10084;&#65039; by{" "}
+          <Link
+            as="a"
+            href="https://github.com/D-Antonelli/tic-tac-toe"
+            target="_blank"
+          >
+            derya
+          </Link>
+        </Credits>
+      </Footer>
+      <Confetti recycle={false} run={celebrate} numberOfPieces={1000} />
     </>
   );
 }
