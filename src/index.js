@@ -23,11 +23,8 @@ const Styled = createGlobalStyle`
   body,
   button {
     font-family: 'Bangers', cursive;
-    font-size: 3rem;
+    font-size: 2vmax;
   }
-
-  
-
 `;
 
 ReactDOM.render(

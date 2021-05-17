@@ -4,29 +4,87 @@ import coords from "../game-logic/coordinates";
 import Board from "./board";
 import styled from "styled-components";
 import Confetti from "react-confetti";
+import device from "./media-queries";
 
 const Header = styled.header`
   display: flex;
-  margin-bottom: 5rem;
+  margin-bottom: 5.5vh;
   justify-content: center;
-  height: 10vh;
+  height: 9vh;
+  position: relative;
+
+  @media ${device.laptop} and ${device.minHeight} {
+    height: 1vh;
+  }
+
+  @media ${device.tablet} {
+    height: 0;
+  }
 `;
 
 const Title = styled.h1`
   color: #e4ff03;
   -webkit-text-stroke: 2px black;
+
+  @media ${device.mobileL} {
+    -webkit-text-stroke: 1px black;
+  }
 `;
 
-const Main = styled.main`
+const Content = styled.main`
   margin: 0 auto;
-  width: 60%;
+  position: relative;
+  ${"" /* width: 65%; */}
   height: 78vh;
   display: flex;
   align-items: center;
+  justify-content: center;
+  @media ${device.laptop} and ${device.minHeight}, ${device.mobileL} {
+    flex-direction: column-reverse;
+    justify-content: space-between;
+  }
+
+  @media ${device.tablet} and (max-height: 799px) {
+    flex-direction: column-reverse;
+    justify-content: space-between;
+    height: 85vh;
+  }
+
+  @media ${device.tablet} and (max-height: 464px) {
+    height: 90vh;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  @media ${device.mobileL} {
+    height: 65vh;
+  }
 `;
 
 const GameBoard = styled.div`
-  margin-right: 10rem;
+  margin-right: 10vw;
+  flex-shrink: 0;
+
+  @media ${device.laptop} and ${device.minHeight}, ${device.tablet} {
+    margin-right: 0;
+  }
+`;
+
+const GameInfo = styled.div`
+  height: 100%;
+  min-width: 30vmax;
+  margin-left: 0;
+
+  @media ${device.laptop} and ${device.minHeight}, ${device.tablet} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+`;
+
+const InfoList = styled.ul`
+  list-style: none;
+  padding: 0;
 `;
 
 const StatusText = styled.h2`
@@ -43,33 +101,48 @@ const Moves = styled.li`
   &:nth-child(2n) {
     transform: skewX(-8deg) skewY(2deg);
   }
+
+  &:not(:first-child) {
+    @media ${device.laptop} and ${device.minHeight}, ${device.tablet} {
+      display: none;
+    }
+
+    
+  }
+
+  &:first-child {
+    @media ${device.laptop} and ${device.minHeight}, ${device.tablet} {
+      transform: unset;
+    }
+  }
 `;
 
 const JumpBtn = styled.button`
   cursor: pointer;
   transition: all 2s ease-in-out;
+
   &:hover {
     background: linear-gradient(10deg, #34ff22 0 50%, #e4ff03 50% 100%);
   }
 `;
 
 const Footer = styled.footer`
-  position: fixed;
+position: fixed;
   bottom: 0;
   width: 100%;
-  height: 4rem;
+  height: 4vmax;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
 const Credits = styled.span`
-  font-size: 1.8rem;
+  font-size: 3vmin;
 `;
 
 const Link = styled.button`
   color: black;
-  transition: .2s ease;
+  transition: 0.2s ease;
 
   &:hover {
     color: yellow;
@@ -171,10 +244,10 @@ export default function Game() {
 
   return (
     <>
-      <Header>
+      <Header role="banner">
         <Title>Tic-Tac-Toe</Title>
       </Header>
-      <Main>
+      <Content role="main">
         <GameBoard>
           <Board
             squares={history[stepNumber].squares}
@@ -182,14 +255,14 @@ export default function Game() {
             styles={styles}
           />
         </GameBoard>
-        <div className="game-info" style={{ height: "100%" }}>
+        <GameInfo>
           <div>
             <StatusText>{status}</StatusText>
           </div>
-          <ul style={{ listStyle: "none" }}>{moves}</ul>
-        </div>
-      </Main>
-      <Footer>
+          <InfoList>{moves}</InfoList>
+        </GameInfo>
+      </Content>
+      <Footer role="contentinfo">
         <Credits>
           Made with &#10084;&#65039; by{" "}
           <Link
