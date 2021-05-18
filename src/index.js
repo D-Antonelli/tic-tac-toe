@@ -2,6 +2,7 @@ import Game from "./components/game";
 import ReactDOM from "react-dom";
 import { createGlobalStyle } from "styled-components";
 import React from "react";
+import ReactDOMServer from "react-dom/server";
 
 const Styled = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
@@ -34,3 +35,5 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById("root")
 );
+
+ReactDOMServer.renderToString(<Game/>);
