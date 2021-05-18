@@ -10,5 +10,5 @@ Interactive board game from React [tutorial](https://reactjs.org/tutorial/tutori
  [x] When no one wins, display a message about the result being a draw. 
 
  # LIVE
- Live version of the project is available [HERE!]()
+ Live version of the project is available [HERE!](https://x-tic-tac-toe-x.netlify.app/)
 
