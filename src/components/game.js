@@ -5,6 +5,7 @@ import Board from "./board";
 import styled from "styled-components";
 import Confetti from "react-confetti";
 import device from "./media-queries";
+import useWindowSize from "./use-window-size";
 
 const Header = styled.header`
   display: flex;
@@ -39,14 +40,14 @@ const Content = styled.main`
   display: flex;
   align-items: center;
   justify-content: center;
-  @media ${device.laptop} and ${device.minHeight}, ${device.mobileL} {
+  @media ${device.laptop} and ${device.minHeight},
+    ${device.mobileL},
+    ${device.tablet} {
     flex-direction: column-reverse;
     justify-content: space-between;
   }
 
   @media ${device.tablet} and (max-height: 799px) {
-    flex-direction: column-reverse;
-    justify-content: space-between;
     height: 85vh;
   }
 
@@ -106,8 +107,6 @@ const Moves = styled.li`
     @media ${device.laptop} and ${device.minHeight}, ${device.tablet} {
       display: none;
     }
-
-    
   }
 
   &:first-child {
@@ -127,7 +126,7 @@ const JumpBtn = styled.button`
 `;
 
 const Footer = styled.footer`
-position: fixed;
+  position: fixed;
   bottom: 0;
   width: 100%;
   height: 4vmax;
@@ -161,6 +160,7 @@ export default function Game() {
   const [stepNumber, setStepNumber] = useState(history.length - 1);
   const [styles, setStyles] = useState(Array(9).fill({}));
   const [celebrate, setCelebrate] = useState(false);
+  const { width, height } = useWindowSize();
 
   function handleClick(i) {
     const timeline = history.slice(0, stepNumber + 1);
@@ -274,7 +274,13 @@ export default function Game() {
           </Link>
         </Credits>
       </Footer>
-      <Confetti recycle={false} run={celebrate} numberOfPieces={1000} />
+      <Confetti
+        recycle={false}
+        run={celebrate}
+        numberOfPieces={1000}
+        width={width}
+        height={height}
+      />
     </>
   );
 }
