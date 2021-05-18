@@ -36,7 +36,7 @@ const Content = styled.main`
   margin: 0 auto;
   position: relative;
   ${"" /* width: 65%; */}
-  height: 78vh;
+  height: 82vh;
   display: flex;
   align-items: center;
   justify-content: center;
