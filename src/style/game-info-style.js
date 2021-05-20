@@ -16,16 +16,19 @@ export const StyledGameInfo = styled.div`
 export const InfoList = styled.ul`
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 2vmin;
 `;
 
 export const StatusText = styled.h2`
   color: #34ff22;
   -webkit-text-stroke: 1px black;
+  margin:0;
+  padding: 0;
 `;
 
 export const StatusWrapper = styled.div`
   height: 10rem;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -41,10 +44,8 @@ export const Moves = styled.li`
     transform: skewX(-8deg) skewY(2deg);
   }
 
-  &:not(:first-child) {
-    @media ${device.laptop} and ${device.minHeight}, ${device.tablet} {
-      display: none;
-    }
+  @media ${device.laptop} and ${device.minHeight}, ${device.tablet} {
+    display: none;
   }
 `;
 
@@ -60,7 +61,6 @@ export const JumpBtn = styled.button`
 export const RestartButton = styled(JumpBtn)`
   background: #642b9d;
   border: none;
-
 `;
 
 export const BtnText = styled(StatusText)`
