@@ -1,13 +1,5 @@
 import Square from "./square";
-import styled from "styled-components";
-
-const BoardRow = styled.div`
-  &:after {
-  clear: both;
-  content: "";
-  display: table;
-  }
-`;
+import { BoardRow } from "../style/board-style";
 
 export default function Board({ squares, onClick, styles }) {
   function renderSquare(i) {
