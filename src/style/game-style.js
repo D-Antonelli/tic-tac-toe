@@ -52,7 +52,11 @@ export const Content = styled.main`
   }
 
   @media ${device.mobileL} {
-    height: 65vh;
+    height: 85vh;
+  }
+
+  @media ${device.mobileL} and (min-height: 464px) {
+    height: 80vh;
   }
 `;
 
@@ -62,6 +66,10 @@ export const GameBoard = styled.div`
 
   @media ${device.laptop} and ${device.minHeight}, ${device.tablet} {
     margin-right: 0;
+  }
+
+  @media ${device.tablet} {
+    height: 45vh;
   }
 `;
 
