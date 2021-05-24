@@ -1,6 +1,14 @@
 # TIC-TAC-TOE
 Interactive board game from React [tutorial](https://reactjs.org/tutorial/tutorial.html).
 
+# GIF
+![screen gif](src/assets/tic-tac-toe.gif)
+
+# TECH STACK
+- React Hooks
+- Styled-components
+- Cypress
+
 # TO-DO
  - [X] Display the location for each move in the format (col, row) in the move history list.  
  - [X] Bold the currently selected item in the move list. 
