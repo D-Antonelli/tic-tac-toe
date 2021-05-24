@@ -51,20 +51,27 @@ export const Moves = styled.li`
 
 export const JumpBtn = styled.button`
   cursor: pointer;
-  transition: all 2s ease-in-out;
+  -webkit-box-shadow: 2px 5px 16px 0px #0b325e,
+    6px 6px 8px -3px rgba(255, 255, 255, 0);
+  box-shadow: 2px 5px 16px 0px #0b325e, 6px 6px 8px -3px rgba(255, 255, 255, 0);
 
   &:hover {
     background: linear-gradient(10deg, #34ff22 0 50%, #e4ff03 50% 100%);
+    transform: scale(1.03);
+  }
+
+  &:active {
+    transform: translateY(3px);
   }
 `;
 
 export const RestartButton = styled(JumpBtn)`
-  background: #642b9d;
-  border: none;
+  background: yellow;
+  border-radius: 30px;
 `;
 
 export const BtnText = styled(StatusText)`
-  padding: 1vw 0;
+  padding: 1vw .5vw;
   margin: 0;
   color: red;
 `;
