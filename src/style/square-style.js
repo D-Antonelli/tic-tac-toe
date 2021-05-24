@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { appear } from "./animation";
 
-export const Tile = styled.button`
+export const Tile = styled.button.attrs({'aria-label': "make next move"})`
   float: left;
   line-height: 3.4rem;
   cursor: pointer;
